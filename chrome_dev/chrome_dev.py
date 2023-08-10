@@ -221,3 +221,17 @@ class ChromDevWrapper ():
         if response[0]['result']["result"]["type"] == "undefined":
             return None
         return response[0]['result']["result"]["value"]
+    
+    def get_prop (self, selector:str, prop:str):
+        """ Get specific attribute from visible element
+
+        Args:
+            selector (str): css selector
+            prop (str): property to get
+        """
+        
+        response = self.chrome.Runtime.evaluate (expression=f"document.querySelector ('{selector}').{prop}")
+        try: 
+            return response[0]['result']["result"]["value"].strip()
+        except:
+            return ""
