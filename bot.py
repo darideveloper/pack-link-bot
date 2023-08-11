@@ -81,9 +81,7 @@ class Bot (ChromDevWrapper):
             # Fix data
             if country == "United States":
                 country = "USA"
-            
-            # TODO: Validate country
-            
+        
             # Get data from kofi
             
             # Load details page
@@ -103,7 +101,12 @@ class Bot (ChromDevWrapper):
             if not shipping_data["phone"]:
                 shipping_data["phone"] = self.__extract_regex__ (full_text, self.regex_patterns ["phone"])
             
-            # TODO: Validate data
+            # Validate data
+            exclude_keys = ["show_details"]
+            for key in shipping_data:
+                if not shipping_data [key] and key not in exclude_keys:
+                    print (f"missing {key} for {commission ['url']}")
+                    continue
             
             print ()
 
