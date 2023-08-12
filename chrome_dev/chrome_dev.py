@@ -223,7 +223,7 @@ class ChromDevWrapper ():
         return response[0]['result']["result"]["value"]
     
     def get_prop (self, selector:str, prop:str):
-        """ Get specific attribute from visible element
+        """ Get specific propery from visible element
 
         Args:
             selector (str): css selector
@@ -235,3 +235,14 @@ class ChromDevWrapper ():
             return response[0]['result']["result"]["value"].strip()
         except:
             return ""
+    
+    def set_prop (self, selector:str, prop:str, value:str):
+        """ Set specific propery from visible element
+
+        Args:
+            selector (str): css selector
+            prop (str): property to get
+            value (str): value to set
+        """
+        
+        response = self.chrome.Runtime.evaluate (expression=f"document.querySelector ('{selector}').{prop} = '{value}'")
