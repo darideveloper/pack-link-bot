@@ -16,12 +16,13 @@ class Bot (ChromDevWrapper):
         # Start chrome
         super().__init__ (CHROME_PATH)
         
+        self.summary = []        
+        
         # Instances
         self.kofi_sheets = KofiSheets ()
         self.kofi_bot = KofiBot (self)
-        self.packlink_bot = PackLinkBot (self)
+        self.packlink_bot = PackLinkBot (self, self.summary)
         
-        self.summary = []        
         
     def create_commissions_drafts (self):
         """ Create a draft for each commission
@@ -51,7 +52,8 @@ class Bot (ChromDevWrapper):
                 city=shipping_data ["city"],
                 zip_code=shipping_data ["zip_code"],
                 phone=shipping_data ["phone"],
-                email=shipping_data ["email"]
+                email=shipping_data ["email"],
+                price=commission ["amount"],
             )
             
             print ()

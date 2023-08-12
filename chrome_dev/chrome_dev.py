@@ -124,7 +124,6 @@ class ChromDevWrapper ():
         """
         
         # Get input
-        dom = self.chrome.DOM.getDocument()
         element = self.chrome.DOM.getDocument()[0]["result"]["root"]["nodeId"]
         result = self.chrome.DOM.querySelector(nodeId=element, selector=selector)
         node_id = result[0]["result"]["nodeId"]
@@ -245,4 +244,5 @@ class ChromDevWrapper ():
             value (str): value to set
         """
         
-        response = self.chrome.Runtime.evaluate (expression=f"document.querySelector ('{selector}').{prop} = '{value}'")
+        self.chrome.Runtime.evaluate (expression=f"document.querySelector ('{selector}').{prop} = '{value}'")
+        sleep (self.base_wait_time)

@@ -12,16 +12,6 @@ class KofiSheets (SheetsManager):
     def __init__ (self):
         super().__init__ (GOOGLE_SHEETS, CREDS_PATH)
         
-    def __format_rows__ (self, rows:list) -> list:
-        """ 
-
-        Args:
-            rows (list): _description_
-
-        Returns:
-            list: _description_
-        """
-        
     def get_kofi_sheet_data (self, sheet_name:str) -> list:
         """ Query data from 'kofi donations' page
         
@@ -29,7 +19,14 @@ class KofiSheets (SheetsManager):
             sheet_name (str): sheet name to query
 
         Returns:
-            list: _description_
+            list: list of dicts with data from kofi donations, sales or commissions:
+                commissions: 
+                    date, time, user name, amount, email, currency, product name, 
+                    country, full address, adiitional details, url, draft created
+                donations:
+                    TODO
+                sales:
+                    TODO
         """
         
         self.set_sheet (f"kofi {sheet_name}")
