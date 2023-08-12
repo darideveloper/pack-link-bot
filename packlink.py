@@ -23,13 +23,14 @@ class PackLinkBot ():
             price (float): price of the service
         """
         
+        
         # Connect to chrome dev tools
         self.driver = driver
         self.summary = summary
         
         self.shipping_price = 0
         self.price = 0
-        
+      
         self.selectors = {
             "menu_item": 'button[role="menuitem"]',
             "next": 'button[type="submit"]',
@@ -150,6 +151,12 @@ class PackLinkBot ():
         current_step = "address"
         current_selectors = self.selectors [current_step]
         
+        # Risk option
+        if RIST_SHIPMENT:
+            self.driver.click (current_selectors["risk"])
+        else:
+            self.driver.click (current_selectors["no-risk"])
+            
         # Format data
         data = {
             "first_name": self.first_name,
@@ -171,15 +178,14 @@ class PackLinkBot ():
         
         # Full data
         for key, value in data.items ():
-            self.driver.send_data_js (current_selectors[key], value)
+            
+            # Delete old chars
+            text = self.driver.get_prop (current_selectors[key], "value")
+            if text:
+                self.driver.backspace (current_selectors[key], len (text))
+            self.driver.send_data (current_selectors[key], value)
     
-        # Risk option
-        if RIST_SHIPMENT:
-            self.driver.click (current_selectors["risk"])
-        else:
-            self.driver.click (current_selectors["no-risk"])
-        
-        sleep (1)
+        # Submit form with js
         self.driver.click (self.selectors["next"])
         sleep (1)
 

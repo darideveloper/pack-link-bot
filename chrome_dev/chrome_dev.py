@@ -246,3 +246,29 @@ class ChromDevWrapper ():
         
         self.chrome.Runtime.evaluate (expression=f"document.querySelector ('{selector}').{prop} = '{value}'")
         sleep (self.base_wait_time)
+        
+    def backspace (self, selector:str, chars_num:int): 
+        
+        # Get the input element's node ID
+        result = self.chrome.DOM.querySelector(nodeId=1, selector=selector)  # You might need to adjust the nodeId value
+        input_node_id = result['nodeId']
+
+        # Focus on the input text box
+        self.chrome.DOM.focus(nodeId=input_node_id)
+
+        for _ in range(chars_num):
+            # Simulate a "Backspace" key press
+            key_event_params = {
+                "type": "keyDown",
+                "key": "Backspace",
+                "code": "Backspace",
+                "text": "\u0008",  # Unicode for the Backspace key
+                "unmodifiedText": "\u0008",
+                "nativeVirtualKeyCode": 8,
+                "windowsVirtualKeyCode": 8,
+            }
+            self.chrome.Input.dispatchKeyEvent(**key_event_params)
+
+            # Simulate a "Backspace" key release
+            key_event_params["type"] = "keyUp"
+            self.chrome.Input.dispatchKeyEvent(**key_event_params)
