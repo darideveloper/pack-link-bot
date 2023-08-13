@@ -31,6 +31,7 @@ class PackLinkBot ():
         
         self.shipping_price = 0
         self.price = 0
+        self.current_step = "start"
       
         self.selectors = {
             "menu_item": 'button[role="menuitem"]',
@@ -85,39 +86,46 @@ class PackLinkBot ():
         self.driver.click (self.selectors ["menu_item"])
         return True
     
+    def __get_selectors__ (self, step:str) -> dict:
+        """ Get css selectors for current step, update step and
+            refresh selenium
+        """
+        
+        self.current_step = step
+        selectors = self.selectors [step]
+        self.driver.refresh_selenium ()
+        return selectors        
+    
     def __shipping__ (self):
         """ Write data in shipping details section
         """
         
-        # Selectors and step
-        current_step = "shipment"
-        current_selectors = self.selectors [current_step]
-        self.driver.refresh_selenium ()
+        selectors = self.__get_selectors__ ("shipment")
         
         # Select country and post code
-        country_found = self.__select_item__ (current_selectors["country"], self.country)
-        zip_code_found = self.__select_item__ (current_selectors["post_code"], self.zip_code)
+        country_found = self.__select_item__ (selectors["country"], self.country)
+        zip_code_found = self.__select_item__ (selectors["post_code"], self.zip_code)
         if not zip_code_found:
-            zip_code_found = self.driver.send_data (current_selectors["post_code"], self.city)
+            zip_code_found = self.driver.send_data (selectors["post_code"], self.city)
         
         # Validate if country and post code were found
         if not country_found:
             error = f"country not found for {self.country}"
-            self.summary.append (["error", current_step, error])
+            self.summary.append (["error", self.current_step, error])
             raise Exception (error)
         
         if not zip_code_found:
             error = f"zip code and city not found for {self.zip_code, self.city}"
-            self.summary.append (["error", current_step, error])
+            self.summary.append (["error", self.current_step, error])
             raise Exception(error)
             
         # Write parcel data (if its required)
-        current_weight = self.driver.get_attrib (current_selectors["weigth"], "value")
+        current_weight = self.driver.get_attrib (selectors["weigth"], "value")
         if not current_weight:
-            self.driver.send_data (current_selectors["weigth"], PARCEL_WEIGTH)
-            self.driver.send_data (current_selectors["lenght"], PARCEL_LENGTH)
-            self.driver.send_data (current_selectors["width"], PARCEL_WIDTH)
-            self.driver.send_data (current_selectors["height"], PARCEL_HEIGHT)
+            self.driver.send_data (selectors["weigth"], PARCEL_WEIGTH)
+            self.driver.send_data (selectors["lenght"], PARCEL_LENGTH)
+            self.driver.send_data (selectors["width"], PARCEL_WIDTH)
+            self.driver.send_data (selectors["height"], PARCEL_HEIGHT)
         
         self.driver.click (self.selectors["next"])
         sleep (1)
@@ -127,12 +135,10 @@ class PackLinkBot ():
         """
         
         # Selectors and step
-        current_step = "service"
-        current_selectors = self.selectors [current_step]
-        self.driver.refresh_selenium ()
+        selectors = self.__get_selectors__ ("service")
         
-        self.shipping_price = self.driver.get_text (current_selectors["price"])
-        button = self.driver.get_text (current_selectors["button"])
+        self.shipping_price = self.driver.get_text (selectors["price"])
+        button = self.driver.get_text (selectors["button"])
         
         if not self.shipping_price or not button:
             error = "services not found"
@@ -143,7 +149,7 @@ class PackLinkBot ():
         self.shipping_price = float (self.shipping_price.replace ("€", "").replace (",", "."))
         
         # Select service
-        self.driver.click (current_selectors["button"])
+        self.driver.click (selectors["button"])
         sleep (1)
         
     
@@ -152,9 +158,7 @@ class PackLinkBot ():
         """
         
         # Selectors and step
-        current_step = "address"
-        current_selectors = self.selectors [current_step]
-        self.driver.refresh_selenium ()
+        selectors = self.__get_selectors__ ("address")
             
         # Format data
         data = {
@@ -169,19 +173,19 @@ class PackLinkBot ():
         for key, value in data.items ():
             
             # Delete old chars
-            input_elem = self.driver.get_elem (current_selectors[key])
-            input_text = self.driver.get_attrib (current_selectors[key], "value")
+            input_elem = self.driver.get_elem (selectors[key])
+            input_text = self.driver.get_attrib (selectors[key], "value")
             if input_text:
                 input_elem.send_keys(Keys.BACKSPACE * len(input_text))
                 print ()
                       
-            self.driver.send_data (current_selectors[key], value)
+            self.driver.send_data (selectors[key], value)
         
         # Content shipped
-        content_shipped_found = self.__select_item__ (current_selectors["content_shipped"], CONTENT_SHIPPED)
+        content_shipped_found = self.__select_item__ (selectors["content_shipped"], CONTENT_SHIPPED)
         if not content_shipped_found:
             error = f"content shipped not found for {CONTENT_SHIPPED}"
-            self.summary.append (["error", current_step, error])
+            self.summary.append (["error", self.current_step, error])
             raise Exception(error)
         
         # Add content and price data
@@ -190,12 +194,13 @@ class PackLinkBot ():
         
         # Risk option
         if RIST_SHIPMENT:
-            self.driver.click_js (current_selectors["risk"])
+            self.driver.click_js (selectors["risk"])
         else:
-            self.driver.click_js (current_selectors["no-risk"])
+            self.driver.click_js (selectors["no-risk"])
     
         # Submit form with js
-        self.driver.click_js (self.selectors["next"])
+        self.driver.refresh_selenium ()
+        self.driver.click (self.selectors["next"])
         sleep (1)
 
     def create_draft (self, country:str, first_name:str, last_name:str, street:str, 
