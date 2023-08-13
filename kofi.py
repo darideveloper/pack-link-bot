@@ -36,6 +36,7 @@ class KofiBot ():
                 r'\+?\d{1,3}\.\d{3}\.\d{3}\.\d{4}',
                 r'\+?\d{8,15}',
                 r'\d{3}-\d{3}-\d{4}',
+                r'\(\d{3}\)[\s-]?\d{3}[\s-]?\d{4}',
             ]
         }
                 
@@ -58,11 +59,12 @@ class KofiBot ():
         
         return ""       
         
-    def get_shipping_data (self, url:str) -> dict:
+    def get_shipping_data (self, url:str, email:str) -> dict:
         """ Get shipping data from kofi
 
         Args:
-            comission (dict): kofi details link
+            url (str): url of the kofi donation
+            email (str): email of the user
 
         Returns:
             dict: shipping data based in payment type
@@ -98,6 +100,10 @@ class KofiBot ():
         extra_fields = ["show_details", "ticket"]
         for row in extra_fields:
             shipping_data.pop (row)
+        
+        # Fix email
+        if not shipping_data["email"]:
+            shipping_data["email"] = email
         
         # Validate data
         default_data = {

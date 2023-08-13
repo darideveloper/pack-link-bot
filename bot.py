@@ -51,7 +51,7 @@ class Bot (WebScraping):
         
             # Get and validate shipping data
             try:
-                shipping_data = self.kofi_bot.get_shipping_data (commission["url"])
+                shipping_data = self.kofi_bot.get_shipping_data (commission["url"], commission["email"])
             except Exception as e:
                 print (f">> Error getting shipping data: {e}")
                 status = ["error", "getting shipping data", str(e), commission["url"]]
