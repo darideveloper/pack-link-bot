@@ -1,4 +1,5 @@
 import os
+import json
 from time import sleep
 from dotenv import load_dotenv
 from scraping.web_scraping import WebScraping
@@ -11,7 +12,12 @@ PARCEL_LENGTH = os.getenv ("PARCEL_LENGTH")
 PARCEL_WIDTH = os.getenv ("PARCEL_WIDTH")
 PARCEL_HEIGHT = os.getenv ("PARCEL_HEIGHT")
 CONTENT_SHIPPED = os.getenv ("CONTENT_SHIPPED")
-RIST_SHIPMENT = os.getenv ("RIST_SHIPMENT") == "True"
+RISK_SHIPMENT = os.getenv ("RISK_SHIPMENT") == "True"
+CUSTOM_CATEGORY = os.getenv ("CUSTOM_CATEGORY")
+CUSTOM_DETAILS = os.getenv ("CUSTOM_DETAILS")
+CUSTOM_MADE_IN = os.getenv ("CUSTOM_MADE_IN")
+CUSTOM_QUANTITY = os.getenv ("CUSTOM_QUANTITY")
+CUSTOM_WEIGHT = os.getenv ("CUSTOM_WEIGHT")
 
 class PackLinkBot (): 
     
@@ -36,6 +42,7 @@ class PackLinkBot ():
         self.selectors = {
             "menu_item": 'button[role="menuitem"]',
             "next": 'button[type="submit"]',
+            "save": 'button[data-id="checkout-save-button"]',
             "shipment": {
                 "country": 'input[name="to.country"]',
                 "post_code": 'input[name="to.postalCode"]',
@@ -58,6 +65,16 @@ class PackLinkBot ():
                 "content_value": 'input[name="value"]',
                 "risk": 'input[value="NO_INSURANCE"]',
                 "no-risk": 'input[value="NO_INSURANCE"]',
+            },
+            "custom": {
+                'invoice': 'input[name="invoiceNumber"]',
+                'category': 'input[name="inventoryOfContents[0].category"]',
+                'description': 'textarea[name="inventoryOfContents[0].description"]', 
+                'made': 'input[name="inventoryOfContents[0].countryOfOrigin"]',
+                'quantity': 'input[name="inventoryOfContents[0].numberOfItems"]',
+                'value': 'input[name="inventoryOfContents[0].value"]',
+                'weight': 'input[name="inventoryOfContents[0].weight"]',
+                'terms': 'input[name="customsTerms"]',
             }
         }
         
@@ -95,6 +112,26 @@ class PackLinkBot ():
         selectors = self.selectors [step]
         self.driver.refresh_selenium ()
         return selectors        
+    
+    def __write_group__ (self, selectors:dict, data:dict):
+        """ Write text in a group of inputs
+
+        Args:
+            selectors (dict): css selectors of the inputs
+            data (dict): data to write
+        """
+        
+        # Main data
+        for key, value in data.items ():
+            
+            # Delete old chars
+            input_elem = self.driver.get_elem (selectors[key])
+            input_text = self.driver.get_attrib (selectors[key], "value")
+            if input_text:
+                input_elem.send_keys(Keys.BACKSPACE * len(input_text))
+                print ()
+                      
+            self.driver.send_data (selectors[key], value)
     
     def __shipping__ (self):
         """ Write data in shipping details section
@@ -152,7 +189,6 @@ class PackLinkBot ():
         self.driver.click (selectors["button"])
         sleep (1)
         
-    
     def __address__ (self):
         """ Write data in address section
         """
@@ -160,26 +196,15 @@ class PackLinkBot ():
         # Selectors and step
         selectors = self.__get_selectors__ ("address")
             
-        # Format data
-        data = {
+        # Write main data
+        self.__write_group__ (selectors, {
             "first_name": self.first_name,
             "last_name": self.last_name,
             "phone": self.phone,
             "email": self.email,
             "street": self.street,
-        }
-        
-        # Main data
-        for key, value in data.items ():
-            
-            # Delete old chars
-            input_elem = self.driver.get_elem (selectors[key])
-            input_text = self.driver.get_attrib (selectors[key], "value")
-            if input_text:
-                input_elem.send_keys(Keys.BACKSPACE * len(input_text))
-                print ()
-                      
-            self.driver.send_data (selectors[key], value)
+            "content_value": str(self.price - self.shipping_price),
+        })
         
         # Content shipped
         content_shipped_found = self.__select_item__ (selectors["content_shipped"], CONTENT_SHIPPED)
@@ -188,12 +213,8 @@ class PackLinkBot ():
             self.summary.append (["error", self.current_step, error])
             raise Exception(error)
         
-        # Add content and price data
-        data["content_value"] = str(self.price - self.shipping_price)
-        
-        
         # Risk option
-        if RIST_SHIPMENT:
+        if RISK_SHIPMENT:
             self.driver.click_js (selectors["risk"])
         else:
             self.driver.click_js (selectors["no-risk"])
@@ -202,9 +223,57 @@ class PackLinkBot ():
         self.driver.refresh_selenium ()
         self.driver.click (self.selectors["next"])
         sleep (1)
+        
+    def __custom__ (self):
+        """ Write data in custom section
+        """
+        
+        # Selectors and step
+        selectors = self.__get_selectors__ ("custom")
+        
+        # Get invoice number from json
+        json_path = os.path.join (os.path.dirname (__file__), "counters.json")
+        with open (json_path, "r") as file:
+            counters = json.load (file)
+            invoice_number = counters ["invoice_number"]
+        
+        # Select category
+        category_found = self.__select_item__ (selectors["category"], CUSTOM_CATEGORY)
+        
+        # Select made in
+        mode_in_found = self.__select_item__ (selectors["made"], CUSTOM_MADE_IN)
+        
+        # Raise errors
+        if not category_found:
+            error = f"category not found for {CUSTOM_CATEGORY}"
+            self.summary.append (["error", self.current_step, error])
+            raise Exception(error)
+        
+        if not mode_in_found:
+            error = f"made in not found for {CUSTOM_MADE_IN}"
+            self.summary.append (["error", self.current_step, error])
+            raise Exception(error)
+            
+        # Write main data
+        self.__write_group__ (selectors, {
+            'invoice': invoice_number,
+            'description': CUSTOM_DETAILS,
+            'quantity': CUSTOM_QUANTITY,
+            'value': str(self.price - self.shipping_price),
+            'weight': CUSTOM_WEIGHT,
+        })
+        
+        # Accept terms
+        self.driver.click_js (selectors["terms"])
+            
+        # Update invoice number
+        counters ["invoice_number"] += 1
+        with open (json_path, "w") as file:
+            json.dump (counters, file, indent=4)
+        
 
     def create_draft (self, country:str, first_name:str, last_name:str, street:str, 
-                     city:str, zip_code:str, phone:str, email:str, price:float): 
+                     city:str, zip_code:str, phone:str, email:str, price:float, url:str): 
         """ Create a draft in pack link pro
 
         Args:
@@ -217,6 +286,7 @@ class PackLinkBot ():
             phone (str): client phone
             email (str): client email
             price (float): price of the service
+            url (str): url of the commission
 
         Returns:
             bool: True if draft was created
@@ -238,7 +308,8 @@ class PackLinkBot ():
         self.__shipping__ ()
         self.__service__ ()
         self.__address__ ()
+        self.__custom__ ()
         
         # Select service
-        print ()
-        
+        self.driver.click (self.selectors["save"])
+        print (f"Done for {url}")
