@@ -102,6 +102,6 @@ class KofiBot ():
         # Validate data
         for key in shipping_data:
             if not shipping_data [key] and key:
-                raise Exception (f"missing {key} for {url}")
+                raise Exception (f"missing {key}")
             
         return shipping_data        

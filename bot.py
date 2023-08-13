@@ -15,9 +15,7 @@ class Bot (WebScraping):
         
         # Start chrome
         super().__init__ (chrome_folder=CHROME_FOLDER)
-        
-        self.summary = []        
-        
+                
         # Instances
         self.kofi_sheets = KofiSheets ()
         self.kofi_bot = KofiBot (self)
@@ -39,6 +37,9 @@ class Bot (WebScraping):
         
         for commission in commissions:
             
+            error = ""
+            status = []
+            
             print (f"\nCreating draft for {commission['url']}...")
             
             # Get required fields from data
@@ -53,35 +54,43 @@ class Bot (WebScraping):
                 shipping_data = self.kofi_bot.get_shipping_data (commission["url"])
             except Exception as e:
                 print (f">> Error getting shipping data: {e}")
-                self.summary.append (["error", "getting shipping data", str(e), commission["url"]])
-                continue
-        
-            try:
-                self.packlink_bot.create_draft (
-                    country=country,
-                    first_name=shipping_data ["first_name"],
-                    last_name=shipping_data ["last_name"],
-                    street=shipping_data ["street"],
-                    city=shipping_data ["city"],
-                    zip_code=shipping_data ["zip_code"],
-                    phone=shipping_data ["phone"],
-                    email=shipping_data ["email"],
-                    price=commission ["amount"],
-                    url=commission ["url"]
-                )
-            except Exception as e:
-                print (f">> Error crating draft: {e}")
-                self.summary.append (["error", self.packlink_bot.current_step, str(e), commission["url"]])
-                continue
+                status = ["error", "getting shipping data", str(e), commission["url"]]
+                error = e
+            else:
             
-            # Save done
-            print (">> Done")
-            self.summary.append (["done", "", "", commission["url"]])
+                try:
+                    self.packlink_bot.create_draft (
+                        country=country,
+                        first_name=shipping_data ["first_name"],
+                        last_name=shipping_data ["last_name"],
+                        street=shipping_data ["street"],
+                        city=shipping_data ["city"],
+                        zip_code=shipping_data ["zip_code"],
+                        phone=shipping_data ["phone"],
+                        email=shipping_data ["email"],
+                        price=commission ["amount"],
+                        url=commission ["url"]
+                    )
+                except Exception as e:
+                    print (f">> Error crating draft: {e}")
+                    status = ["error", self.packlink_bot.current_step, str(e), commission["url"]]
+                    error = e
             
-            # Save logs
+            # Update data in sheets
+            if error:
+                self.kofi_sheets.update ("commissions", commission["url"], details=f"Draft no created: {error}")
+            else:
+                self.kofi_sheets.update ("commissions", commission["url"], new_status="TRUE")
+                
+                # Set done status
+                print (">> Done")
+                status = ["done", "", "", commission["url"]]
+            
+            
+            # Save status in logs
             with open (self.logs_path, "a", newline='') as file:
                 csv_writer = csv.writer (file)
-                csv_writer.writerows (self.summary)
+                csv_writer.writerow (status)
                 
             
 if __name__ == "__main__":
