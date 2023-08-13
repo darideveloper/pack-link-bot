@@ -95,6 +95,11 @@ class PackLinkBot ():
         option = self.driver.get_text (self.selectors ["menu_item"])
         if option == "No results found":
             self.driver.set_attrib (selector, "value", "")
+            
+            # Delete text
+            elem = self.driver.get_elem (selector)
+            elem.send_keys(Keys.BACKSPACE * len(value))
+            
             return False
         
         self.driver.click (self.selectors ["menu_item"])
