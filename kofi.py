@@ -83,6 +83,9 @@ class KofiBot ():
         full_text = self.driver.get_text (self.selectors ["commission"]["ticket"])
         
         # Load shipping details
+        show_details_text = self.driver.get_text (self.selectors ["commission"]["show_details"])
+        if not show_details_text:
+            raise Exception ("show details button not found")
         self.driver.click (self.selectors ["commission"]["show_details"])
         self.driver.refresh_selenium ()        
         sleep (3)

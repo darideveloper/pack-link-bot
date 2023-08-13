@@ -70,8 +70,8 @@ class KofiSheets (SheetsManager):
                 "details": 10
             },
             "sales": {
-                "status": 12,
-                "details": 13
+                "status": 13,
+                "details": 14
             },
         }
         
