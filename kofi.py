@@ -77,6 +77,7 @@ class KofiBot ():
         
         # Load details page
         self.driver.set_page (url)
+        self.driver.refresh_selenium ()
         full_text = self.driver.get_text (self.selectors ["commission"]["ticket"])
         
         # Load shipping details
@@ -100,8 +101,7 @@ class KofiBot ():
         
         # Validate data
         for key in shipping_data:
-            if not shipping_data [key]:
-                print (f"missing {key} for {url}")
-                return {}
+            if not shipping_data [key] and key:
+                raise Exception (f"missing {key} for {url}")
             
         return shipping_data        

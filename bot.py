@@ -1,5 +1,5 @@
 import os
-from time import sleep
+import csv
 from dotenv import load_dotenv
 from sheets import KofiSheets
 from kofi import KofiBot
@@ -21,16 +21,25 @@ class Bot (WebScraping):
         # Instances
         self.kofi_sheets = KofiSheets ()
         self.kofi_bot = KofiBot (self)
-        self.packlink_bot = PackLinkBot (self, self.summary)
+        self.packlink_bot = PackLinkBot (self)
+        
+        # Logs
+        self.logs_path = os.path.join (os.path.dirname (__file__), "logs.csv")
         
         
     def create_commissions_drafts (self):
         """ Create a draft for each commission
         """
         
+        print ("Convert commissions to drafts...")
+        
         commissions = self.kofi_sheets.get_kofi_sheet_data ("commissions")
+        comissions_num = len (commissions)
+        print (f"Found {comissions_num} commissions.")
         
         for commission in commissions:
+            
+            print (f"\nCreating draft for {commission['url']}...")
             
             # Get required fields from data
             country = commission ["country"]
@@ -40,24 +49,41 @@ class Bot (WebScraping):
                 country = "USA"
         
             # Get and validate shipping data
-            shipping_data = self.kofi_bot.get_shipping_data (commission["url"])
-            if not shipping_data:
+            try:
+                shipping_data = self.kofi_bot.get_shipping_data (commission["url"])
+            except Exception as e:
+                print (f">> Error getting shipping data: {e}")
+                self.summary.append (["error", "getting shipping data", str(e), commission["url"]])
+                continue
+        
+            try:
+                self.packlink_bot.create_draft (
+                    country=country,
+                    first_name=shipping_data ["first_name"],
+                    last_name=shipping_data ["last_name"],
+                    street=shipping_data ["street"],
+                    city=shipping_data ["city"],
+                    zip_code=shipping_data ["zip_code"],
+                    phone=shipping_data ["phone"],
+                    email=shipping_data ["email"],
+                    price=commission ["amount"],
+                    url=commission ["url"]
+                )
+            except Exception as e:
+                print (f">> Error crating draft: {e}")
+                self.summary.append (["error", self.packlink_bot.current_step, str(e), commission["url"]])
                 continue
             
-            self.packlink_bot.create_draft (
-                country=country,
-                first_name=shipping_data ["first_name"],
-                last_name=shipping_data ["last_name"],
-                street=shipping_data ["street"],
-                city=shipping_data ["city"],
-                zip_code=shipping_data ["zip_code"],
-                phone=shipping_data ["phone"],
-                email=shipping_data ["email"],
-                price=commission ["amount"],
-            )
+            # Save done
+            print (">> Done")
+            self.summary.append (["done", "", "", commission["url"]])
             
-            print ()
-
+            # Save logs
+            with open (self.logs_path, "a", newline='') as file:
+                csv_writer = csv.writer (file)
+                csv_writer.writerows (self.summary)
+                
+            
 if __name__ == "__main__":
     # Test create drafts
     bot = Bot ()

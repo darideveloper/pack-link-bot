@@ -54,4 +54,3 @@ if __name__ == "__main__":
     donations = kofi_sheets.get_kofi_sheet_data ("donations")
     sales = kofi_sheets.get_kofi_sheet_data ("sales")
     commissions = kofi_sheets.get_kofi_sheet_data ("commissions")
-    print ()

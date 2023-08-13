@@ -21,19 +21,16 @@ CUSTOM_WEIGHT = os.getenv ("CUSTOM_WEIGHT")
 
 class PackLinkBot (): 
     
-    def __init__ (self, driver:WebScraping, summary:list):
+    def __init__ (self, driver:WebScraping):
         """ Create a draft for each commission
 
         Args:
             driver (ChromDevWrapper): chrome dev tools wrapper
-            summary (list): summary of the process
-            price (float): price of the service
         """
         
         
         # Connect to chrome dev tools
         self.driver = driver
-        self.summary = summary
         
         self.shipping_price = 0
         self.price = 0
@@ -129,7 +126,6 @@ class PackLinkBot ():
             input_text = self.driver.get_attrib (selectors[key], "value")
             if input_text:
                 input_elem.send_keys(Keys.BACKSPACE * len(input_text))
-                print ()
                       
             self.driver.send_data (selectors[key], value)
     
@@ -147,14 +143,10 @@ class PackLinkBot ():
         
         # Validate if country and post code were found
         if not country_found:
-            error = f"country not found for {self.country}"
-            self.summary.append (["error", self.current_step, error])
-            raise Exception (error)
+            raise Exception (f"country not found for {self.country}")
         
         if not zip_code_found:
-            error = f"zip code and city not found for {self.zip_code, self.city}"
-            self.summary.append (["error", self.current_step, error])
-            raise Exception(error)
+            raise Exception(f"zip code and city not found for {self.zip_code, self.city}")
             
         # Write parcel data (if its required)
         current_weight = self.driver.get_attrib (selectors["weigth"], "value")
@@ -178,9 +170,7 @@ class PackLinkBot ():
         button = self.driver.get_text (selectors["button"])
         
         if not self.shipping_price or not button:
-            error = "services not found"
-            self.summary.append (["error", "service", error])
-            raise Exception(error)
+            raise Exception("services not found")
         
         # Format price
         self.shipping_price = float (self.shipping_price.replace ("€", "").replace (",", "."))
@@ -209,9 +199,7 @@ class PackLinkBot ():
         # Content shipped
         content_shipped_found = self.__select_item__ (selectors["content_shipped"], CONTENT_SHIPPED)
         if not content_shipped_found:
-            error = f"content shipped not found for {CONTENT_SHIPPED}"
-            self.summary.append (["error", self.current_step, error])
-            raise Exception(error)
+            raise Exception(f"content shipped not found for {CONTENT_SHIPPED}")
         
         # Risk option
         if RISK_SHIPMENT:
@@ -245,14 +233,10 @@ class PackLinkBot ():
         
         # Raise errors
         if not category_found:
-            error = f"category not found for {CUSTOM_CATEGORY}"
-            self.summary.append (["error", self.current_step, error])
-            raise Exception(error)
+            raise Exception(f"category not found for {CUSTOM_CATEGORY}")
         
         if not mode_in_found:
-            error = f"made in not found for {CUSTOM_MADE_IN}"
-            self.summary.append (["error", self.current_step, error])
-            raise Exception(error)
+            raise Exception(f"made in not found for {CUSTOM_MADE_IN}")
             
         # Write main data
         self.__write_group__ (selectors, {
@@ -313,3 +297,4 @@ class PackLinkBot ():
         # Select service
         self.driver.click (self.selectors["save"])
         print (f"Done for {url}")
+        sleep (3)
