@@ -225,6 +225,11 @@ class PackLinkBot ():
             counters = json.load (file)
             invoice_number = counters ["invoice_number"]
         
+        # Validate if custom data is required
+        custom_category_text = self.driver.get_attrib (selectors["category"], "value")
+        if not custom_category_text:
+            return False
+        
         # Select category
         category_found = self.__select_item__ (selectors["category"], CUSTOM_CATEGORY)
         
@@ -254,10 +259,13 @@ class PackLinkBot ():
         counters ["invoice_number"] += 1
         with open (json_path, "w") as file:
             json.dump (counters, file, indent=4)
+            
+        return True
         
 
     def create_draft (self, country:str, first_name:str, last_name:str, street:str, 
-                     city:str, zip_code:str, phone:str, email:str, price:float, url:str): 
+                     city:str, zip_code:str, phone:str, email:str, price:float, url:str,
+                     using_default:list): 
         """ Create a draft in pack link pro
 
         Args:
@@ -271,6 +279,7 @@ class PackLinkBot ():
             email (str): client email
             price (float): price of the service
             url (str): url of the commission
+            using_default (list): list of fields that were filled with default values
 
         Returns:
             bool: True if draft was created
@@ -285,6 +294,8 @@ class PackLinkBot ():
         self.phone = phone
         self.email = email
         self.price = price
+        self.url = url
+        self.using_default = using_default
                         
         self.driver.set_page ("https://pro.packlink.com/private/shipments/create/info")
         sleep (4)
@@ -292,9 +303,16 @@ class PackLinkBot ():
         self.__shipping__ ()
         self.__service__ ()
         self.__address__ ()
-        self.__custom__ ()
+        custom_required = self.__custom__ ()
         
         # Select service
         self.driver.click (self.selectors["save"])
-        print (f"Done for {url}")
         sleep (3)
+        
+        if self.using_default:
+            error = f"Draft created using default values for {', '.join(self.using_default)}"
+            
+            if not custom_required:
+                error += " and custom data not required"
+            
+            raise Exception (error)

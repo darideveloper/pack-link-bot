@@ -69,7 +69,8 @@ class Bot (WebScraping):
                         phone=shipping_data ["phone"],
                         email=shipping_data ["email"],
                         price=commission ["amount"],
-                        url=commission ["url"]
+                        url=commission ["url"],
+                        using_default = shipping_data ["using_default"],
                     )
                 except Exception as e:
                     print (f">> Error crating draft: {e}")
@@ -78,7 +79,13 @@ class Bot (WebScraping):
             
             # Update data in sheets
             if error:
-                self.kofi_sheets.update ("commissions", commission["url"], details=f"Draft no created: {error}")
+                
+                if "default" in str(error).lower():
+                    error = str(error)
+                else:
+                    error = f"Draft NO created: {error}"
+                
+                self.kofi_sheets.update ("commissions", commission["url"], details=error)
             else:
                 self.kofi_sheets.update ("commissions", commission["url"], new_status="TRUE")
                 

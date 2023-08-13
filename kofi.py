@@ -85,7 +85,7 @@ class KofiBot ():
         self.driver.refresh_selenium ()        
         sleep (3)
         
-        shipping_data = {}
+        shipping_data = {"using_default": []}
         for name, selector in self.selectors ["commission"].items ():
             shipping_data [name] = self.driver.get_attrib (selector, "value")
         
@@ -100,8 +100,23 @@ class KofiBot ():
             shipping_data.pop (row)
         
         # Validate data
+        default_data = {
+            "email": "sample@gmail.com",
+            "phone": "+12345678912"
+        }
         for key in shipping_data:
-            if not shipping_data [key] and key:
-                raise Exception (f"missing {key}")
+            if not shipping_data [key]: 
+                
+                # Skip default values control
+                if key == "using_default":
+                    continue
+                
+                # Use default value
+                default_value = default_data.get (key, "")
+                if default_value:
+                    shipping_data [key] = default_value
+                    shipping_data ["using_default"].append (key)
+                else:
+                    raise Exception (f"missing {key}")
             
         return shipping_data        
