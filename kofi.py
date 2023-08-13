@@ -1,14 +1,13 @@
-import os
+import re
 from time import sleep
 from dotenv import load_dotenv
-from chrome_dev.chrome_dev import ChromDevWrapper
-import re
+from scraping.web_scraping import WebScraping
 
 load_dotenv ()
 
 class KofiBot (): 
         
-    def __init__ (self, driver:ChromDevWrapper):
+    def __init__ (self, driver:WebScraping):
         
          # Connect to chrome dev tools
         self.driver = driver
@@ -22,6 +21,7 @@ class KofiBot ():
                 "city": 'input[placeholder="City"]',
                 "zip_code": 'input[placeholder="Postal code"]',  
                 "phone": 'input[placeholder="Telephone"]',
+                "ticket": '#ticket'
             }
         }
         
@@ -77,22 +77,24 @@ class KofiBot ():
         
         # Load details page
         self.driver.set_page (url)
+        full_text = self.driver.get_text (self.selectors ["commission"]["ticket"])
         
         # Load shipping details
         self.driver.click (self.selectors ["commission"]["show_details"])
+        self.driver.refresh_selenium ()        
         sleep (3)
+        
         shipping_data = {}
         for name, selector in self.selectors ["commission"].items ():
-            shipping_data [name] = self.driver.get_prop (selector, "value")
+            shipping_data [name] = self.driver.get_attrib (selector, "value")
         
         # Get email and phone
-        full_text = self.driver.get_text ("#ticket")
         shipping_data["email"] = self.__extract_regex__ (full_text, self.regex_patterns ["email"])
         if not shipping_data["phone"]:
             shipping_data["phone"] = self.__extract_regex__ (full_text, self.regex_patterns ["phone"])
         
         # Remove extra fields
-        extra_fields = ["show_details"]
+        extra_fields = ["show_details", "ticket"]
         for row in extra_fields:
             shipping_data.pop (row)
         

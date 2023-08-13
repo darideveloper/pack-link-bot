@@ -4,17 +4,17 @@ from dotenv import load_dotenv
 from sheets import KofiSheets
 from kofi import KofiBot
 from packlink import PackLinkBot
-from chrome_dev.chrome_dev import ChromDevWrapper
+from scraping.web_scraping import WebScraping
 
 load_dotenv ()
-CHROME_PATH = os.getenv ("CHROME_PATH")
+CHROME_FOLDER = os.getenv ("CHROME_FOLDER")
 
-class Bot (ChromDevWrapper): 
+class Bot (WebScraping): 
     
     def __init__ (self):
         
         # Start chrome
-        super().__init__ (CHROME_PATH)
+        super().__init__ (chrome_folder=CHROME_FOLDER)
         
         self.summary = []        
         

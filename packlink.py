@@ -1,7 +1,8 @@
 import os
 from time import sleep
 from dotenv import load_dotenv
-from chrome_dev.chrome_dev import ChromDevWrapper
+from scraping.web_scraping import WebScraping
+from scraping.web_scraping import Keys
 
 load_dotenv ()
 CHROME_PATH = os.getenv ("CHROME_PATH")
@@ -14,7 +15,7 @@ RIST_SHIPMENT = os.getenv ("RIST_SHIPMENT") == "True"
 
 class PackLinkBot (): 
     
-    def __init__ (self, driver:ChromDevWrapper, summary:list):
+    def __init__ (self, driver:WebScraping, summary:list):
         """ Create a draft for each commission
 
         Args:
@@ -78,7 +79,7 @@ class PackLinkBot ():
         # Validate if optiopn exists
         option = self.driver.get_text (self.selectors ["menu_item"])
         if option == "No results found":
-            self.set_prop (selector, "value", "")
+            self.driver.set_attrib (selector, "value", "")
             return False
         
         self.driver.click (self.selectors ["menu_item"])
@@ -91,6 +92,7 @@ class PackLinkBot ():
         # Selectors and step
         current_step = "shipment"
         current_selectors = self.selectors [current_step]
+        self.driver.refresh_selenium ()
         
         # Select country and post code
         country_found = self.__select_item__ (current_selectors["country"], self.country)
@@ -110,7 +112,7 @@ class PackLinkBot ():
             raise Exception(error)
             
         # Write parcel data (if its required)
-        current_weight = self.driver.get_prop (current_selectors["weigth"], "value")
+        current_weight = self.driver.get_attrib (current_selectors["weigth"], "value")
         if not current_weight:
             self.driver.send_data (current_selectors["weigth"], PARCEL_WEIGTH)
             self.driver.send_data (current_selectors["lenght"], PARCEL_LENGTH)
@@ -127,6 +129,7 @@ class PackLinkBot ():
         # Selectors and step
         current_step = "service"
         current_selectors = self.selectors [current_step]
+        self.driver.refresh_selenium ()
         
         self.shipping_price = self.driver.get_text (current_selectors["price"])
         button = self.driver.get_text (current_selectors["button"])
@@ -136,12 +139,13 @@ class PackLinkBot ():
             self.summary.append (["error", "service", error])
             raise Exception(error)
         
+        # Format price
+        self.shipping_price = float (self.shipping_price.replace ("€", "").replace (",", "."))
+        
         # Select service
         self.driver.click (current_selectors["button"])
         sleep (1)
         
-        # Format price
-        self.shipping_price = float (self.shipping_price.replace ("€", "").replace (",", "."))
     
     def __address__ (self):
         """ Write data in address section
@@ -150,12 +154,7 @@ class PackLinkBot ():
         # Selectors and step
         current_step = "address"
         current_selectors = self.selectors [current_step]
-        
-        # Risk option
-        if RIST_SHIPMENT:
-            self.driver.click (current_selectors["risk"])
-        else:
-            self.driver.click (current_selectors["no-risk"])
+        self.driver.refresh_selenium ()
             
         # Format data
         data = {
@@ -165,6 +164,18 @@ class PackLinkBot ():
             "email": self.email,
             "street": self.street,
         }
+        
+        # Main data
+        for key, value in data.items ():
+            
+            # Delete old chars
+            input_elem = self.driver.get_elem (current_selectors[key])
+            input_text = self.driver.get_attrib (current_selectors[key], "value")
+            if input_text:
+                input_elem.send_keys(Keys.BACKSPACE * len(input_text))
+                print ()
+                      
+            self.driver.send_data (current_selectors[key], value)
         
         # Content shipped
         content_shipped_found = self.__select_item__ (current_selectors["content_shipped"], CONTENT_SHIPPED)
@@ -176,17 +187,15 @@ class PackLinkBot ():
         # Add content and price data
         data["content_value"] = str(self.price - self.shipping_price)
         
-        # Full data
-        for key, value in data.items ():
-            
-            # Delete old chars
-            text = self.driver.get_prop (current_selectors[key], "value")
-            if text:
-                self.driver.backspace (current_selectors[key], len (text))
-            self.driver.send_data (current_selectors[key], value)
+        
+        # Risk option
+        if RIST_SHIPMENT:
+            self.driver.click_js (current_selectors["risk"])
+        else:
+            self.driver.click_js (current_selectors["no-risk"])
     
         # Submit form with js
-        self.driver.click (self.selectors["next"])
+        self.driver.click_js (self.selectors["next"])
         sleep (1)
 
     def create_draft (self, country:str, first_name:str, last_name:str, street:str, 
@@ -219,6 +228,7 @@ class PackLinkBot ():
         self.price = price
                         
         self.driver.set_page ("https://pro.packlink.com/private/shipments/create/info")
+        sleep (4)
         
         self.__shipping__ ()
         self.__service__ ()
