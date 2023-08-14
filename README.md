@@ -186,6 +186,14 @@ You can edit it.
 
 *Note: you can see as reference the **sample.counters.json** file*
 
+## Google Sheets credentials
+
+You should create a credentials file from your Google Console, with the same account owner of the Google Sheets file,  to allow connect to it. 
+
+1. Generate if following [this tutorial](https://github.com/darideveloper/tutorials/blob/master/generate%20google%20sheets%20api%20key/README.md).
+2. Download the json file.
+3. Place in the project folder as `credentials.json`
+
 # Run
 
 For run the bot, just run with your python interpreter the `__main__.py` file  or the project folder
