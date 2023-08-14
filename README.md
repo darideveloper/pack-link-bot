@@ -1,191 +1,200 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
+<div><a href='https://github.com/darideveloper/pack-link-bot/blob/master/LICENSE' target='_blank'>
+                <img src='https://img.shields.io/github/license/darideveloper/pack-link-bot.svg?style=for-the-badge' alt='MIT License' height='30px'/>
+            </a><a href='https://www.linkedin.com/in/francisco-dari-hernandez-6456b6181/' target='_blank'>
+                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=LinkedIn&color=0A66C2&logo=LinkedIn&logoColor=FFFFFF&label=' alt='Linkedin' height='30px'/>
+            </a><a href='https://t.me/darideveloper' target='_blank'>
+                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Telegram&color=26A5E4&logo=Telegram&logoColor=FFFFFF&label=' alt='Telegram' height='30px'/>
+            </a><a href='https://github.com/darideveloper' target='_blank'>
+                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=GitHub&color=181717&logo=GitHub&logoColor=FFFFFF&label=' alt='Github' height='30px'/>
+            </a><a href='https://www.fiverr.com/darideveloper' target='_blank'>
+                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Fiverr&color=222222&logo=Fiverr&logoColor=1DBF73&label=' alt='Fiverr' height='30px'/>
+            </a><a href='https://discord.com/users/992019836811083826' target='_blank'>
+                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Discord&color=5865F2&logo=Discord&logoColor=FFFFFF&label=' alt='Discord' height='30px'/>
+            </a><a href='mailto:darideveloper@gmail.com?subject=Hello Dari Developer' target='_blank'>
+                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Gmail&color=EA4335&logo=Gmail&logoColor=FFFFFF&label=' alt='Gmail' height='30px'/>
+            </a><a href='https://www.twitch.tv/darideveloper' target='_blank'>
+                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Twitch&color=b9a3e3&logo=Twitch&logoColor=ffffff&label=' alt='Twitch' height='30px'/>
+            </a></div><div align='center'><br><br><img src='https://github.com/darideveloper/pack-link-bot/blob/master/logo.png?raw=true' alt='Pack Link Bot' height='80px'/>
 
 
 
-<!-- PROJECT SHIELDS -->
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-[![Fiverr][fiverr-shield]][fiverr-url]
-[![Gmail][gmail-shield]][gmail-url]
+# Pack Link Bot
 
+Project for creating shipment drafts in [Pack LInk Pro](https://pro.packlink.com/private) using the data stored in Google Sheets, from the project [Kofi API](https://github.com/darideveloper/kofi-api)
 
+Project type: **client**
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/darideveloper/europeanstartups_scraper">
-    <img src="imgs/logo.png" alt="Logo" width="200" height="80">
-  </a>
+</div><br><details>
+            <summary>Table of Contents</summary>
+            <ol>
+<li><a href='#buildwith'>Build With</a></li>
+<li><a href='#relatedprojects'>Related Projects</a></li>
+<li><a href='#media'>Media</a></li>
+<li><a href='#details'>Details</a></li>
+<li><a href='#install'>Install</a></li>
+<li><a href='#settings'>Settings</a></li>
+<li><a href='#run'>Run</a></li></ol>
+        </details><br>
 
-<h3 align="center">Europeanstartups Scraper</h3>
+# Build with
 
-  <p align="center">
-    Python scraper for extract data from the page <a href="https://app.europeanstartups.co/companies.startups/f/data_type/anyof_Verified/regions/allof_European%20Union">https://app.europeanstartups.co/companies.startups/f/data_type/anyof_Verified/regions/allof_European%20Union</a>, using python, and a google chrome data with a premium account already logged.
-    <br />
-    <a href="https://github.com/darideveloper/europeanstartups_scraper/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/darideveloper/europeanstartups_scraper/issues">Request Feature</a>
-  </p>
-</div>
+<div align='center'><a href='https://www.python.org/' target='_blank'> <img src='https://cdn.svgporn.com/logos/python.svg' alt='Python' title='Python' height='50px'/> </a><a href='https://www.selenium.dev/' target='_blank'> <img src='https://cdn.svgporn.com/logos/selenium.svg' alt='Selenium' title='Selenium' height='50px'/> </a><a href='https://sheets.google.com/' target='_blank'> <img src='https://www.gstatic.com/images/branding/product/1x/sheets_2020q4_48dp.png' alt='Google Sheets' title='Google Sheets' height='50px'/> </a></div>
 
+# Related projects
 
+<div align='center'><a href='https://github.com/darideveloper/kofi-api' target='_blank'> <img src='https://github.com/darideveloper/kofi-api-sheets-email/blob/master/logo.png?raw=true' alt='Kofi Api' title='Kofi Api' height='50px'/> </a></div>
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+# Media
 
+![address data content type](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/address-data-content-type.png?raw=true)
 
+![address data recipient](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/address-data-recipent.png?raw=true)
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+![choose a service](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/choose-a-service.png?raw=true)
 
-[![Web page Screenshot][product-screenshot]](webpage)
+![custom items](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/custom-items.png?raw=true)
 
-The project extract all results from the page [https://app.europeanstartups.co/companies.startups/f/data_type/anyof_Verified/regions/allof_European%20Union](https://app.europeanstartups.co/companies.startups/f/data_type/anyof_Verified/regions/allof_European%20Union), and save the output data in a csv file.
+![custom sender details](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/custom-sender-details.png?raw=true)
 
-The project is a python script, that use a google chrome data with a premium account already logged, to extract the data from the page.
+![shipment details](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/shipment-details.png?raw=true)
 
+# Details
 
-### Built With
+For use this project, you should have a [Kofi API](https://github.com/darideveloper/kofi-api) service working, and saving data in a google sheets. 
+You also need a **Kofi account** (the same as the Kofi API) **already logged in your google chrome**, and a **Pack Link Pro account** already logged too. 
 
+## Workflow
 
-<div>
-<a href="https://www.python.org/">
-  <img src="https://cdn.svgporn.com/logos/python.svg" width="50" alt="python" title="python">
-</a>
-<a href="https://www.selenium.dev/">
-  <img src="https://cdn.svgporn.com/logos/selenium.svg" width="50" alt="selenium" title="selenium">
-</a>
+The project will: 
 
-<!-- GETTING STARTED -->
-## Getting Started
+1. Get main data from the google sheet. 
+2. Extract the shipping data from kofi details page
+3. Go to [Pack Link Pro Create page](https://pro.packlink.com/private/shipments/create/info)
+4. In the **Shipment details** page, it will fill the: 
+	* Country
+	* Zip code
+	* Weight (if required)
+	* Length (if required)
+	* Width (if required)
+	* Height  (if required)
+5. In the **Choose a service** page, it will select the first option
+6. In the **Address data** page, it will: 
+	* fill the address data with the client user info 
+	* Select the content type
+	* Set a value (calculated as: *product value from google sheet*, minus *shipment price*)
+	* Select the "Shipment protection" or "I am willing to risk my shipments", based in your settings (more about settings details in the following sections)
+7. In the **Customs** page (if is active), it will fill the following data from settings:
+	* Invoice number
+	* Category
+	* Description
+	* Items made in
+	* Quantity
+	* Value (the same as above)
+	* Weight
+8. Save the draft
 
-To get a local copy up and running follow these simple example steps.
+# Install
 
-### Prerequisites
+## Programs
 
-* [Google chrome](https://www.google.com/intl/es-419/chrome/)
-* [Python >=3.10](https://www.python.org/)
-* [Git](https://git-scm.com/)
+To run the project, the following software must be installed:: 
 
-### Installation
+* [Google Chrome](https://www.google.com/intl/es/chrome) last version
+* Python >= 3.10
+* 
+## Third party modules
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/darideveloper/europeanstartups_scraper.git
-   ```
-2. Install python packages (opening a terminal in the project folder)
-   ```sh
-   python -m pip install -r requirements.txt 
-   ```
-3. Create a `.env` file in the project folder.
-4. Update your chrome path in the `.env` file (note: the chrome path is the folder where chrome data its installed)
-   ```js
-   CHROME_PATH = C:\Users\<<your-user-name>>\AppData\Local\Google\Chrome\User Data
-   ```
+Install all the python modules from pip: 
 
+``` bash
+$ pip install -r requirements.txt
+```
 
-<!-- USAGE EXAMPLES -->
-## Usage
+# Settings
 
-1. Go to https://app.europeanstartups.co/companies.startups/f/data_type/anyof_Verified/regions/allof_European%20Union and create an account (if you have problems with your email, try with a [proton email](https://proton.me/es/mail))
-2. Activate the premium trial or buy a premium account
-3. be sure to keep the account logged in the browser.
-4. Open a terminal in the project folder
-5. Run the project folder with python: 
-    ```sh
-    python .
-    ```
-6. Wait until the script finish, and check the `output.csv` file in the project folder (note: while the script its running, you can't use google chrome).
+## Enviroment variables
 
-<!-- ROADMAP -->
-## Roadmap
+In this file (`.env`), are the main options and settings of the project.
 
-- [x] Use chrome data fro avoid login in the page
-- [x] Extract all data from the page
-- [x] Save output data in csv file 
+1. Create a **.env** file, and place the following content
 
-See the [open issues](https://github.com/darideveloper/europeanstartups_scraper/issues) for a full list of proposed features (and known issues).
+```bash
+CHROME_FOLDER = C:Users{your-user}AppDataLocalGoogleChromeUser Data
+GOOGLE_SHEETS=https://docs.google.com/spreadsheets/d/{some random chars}/edit?pli=1#gid=0
+PARCEL_WEIGTH = 1
+PARCEL_LENGTH = 10
+PARCEL_WIDTH = 10
+PARCEL_HEIGHT = 10
+CONTENT_SHIPPED = Electronics
+RISK_SHIPMENT = True
+CUSTOM_CATEGORY = videogames
+CUSTOM_DETAILS = Sample text here
+CUSTOM_MADE_IN = México
+CUSTOM_QUANTITY = 1
+CUSTOM_WEIGHT = 1
+```
+*Note: you can see as reference the **sample.env** file*
 
+### CHROME_FOLDER
 
-<!-- CONTRIBUTING -->
-## Contributing
+Path of your google chrome data
+By default, in windows `C:Users{your-user}AppDataLocalGoogleChromeUser Data`
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+### GOOGLE_SHEETS
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+The link of the google sheet where data will be saved, with edit permissions
+Details about structure and content, in the project [Kofi API](https://github.com/darideveloper/kofi-api)
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### PARCEL_* 
 
+PARCEL_WEIGTH, PARCEL_LENGTH, PARCEL_WIDTH and PARCEL_HEIGHT
 
+These are the values to set in the section **Parcels** from the **Shipment details page**
 
-<!-- LICENSE -->
-## License
+![shipment parcels](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/readme/shipment-parcels.png?raw=true)
 
-Distributed under the MIT License. See `LICENSE` for more information.
+### CONTENT_SHIPPED
 
+The content in the section **Content shipped** from the page **Address data**
 
+![address data content type-content](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/readme/address-data-content-type-content.png?raw=true)
 
-<!-- CONTACT -->
-## Contact
+### RISK_SHIPMENT
 
-Darideveloper - [@developerdari](https://twitter.com/developerdari) - darideveloper@gmail.com.com
+`True` for select the **I am willing to risk my shipments** option, else (for add a protection) save as `False`
 
-Project Link: [https://github.com/darideveloper/europeanstartups_scraper](https://github.com/darideveloper/europeanstartups_scraper)
+### CUSTOM_* 
 
+CUSTOM_CATEGORY, CUSTOM_MADE_IN, CUSTOM_QUANTITY, CUSTOM_WEIGHT
 
-<!-- MARKDOWN LINKS & imgs -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/darideveloper/europeanstartups_scraper.svg?style=for-the-badge
-[contributors-url]: https://github.com/darideveloper/europeanstartups_scraper/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/darideveloper/europeanstartups_scraper.svg?style=for-the-badge
-[forks-url]: https://github.com/darideveloper/europeanstartups_scraper/network/members
-[stars-shield]: https://img.shields.io/github/stars/darideveloper/europeanstartups_scraper.svg?style=for-the-badge
-[stars-url]: https://github.com/darideveloper/europeanstartups_scraper/stargazers
-[issues-shield]: https://img.shields.io/github/issues/darideveloper/europeanstartups_scraper.svg?style=for-the-badge
-[issues-url]: https://github.com/darideveloper/europeanstartups_scraper/issues
-[license-shield]: https://img.shields.io/github/license/darideveloper/europeanstartups_scraper.svg?style=for-the-badge
-[license-url]: https://github.com/darideveloper/europeanstartups_scraper/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/francisco-dari-hernandez-6456b6181/
-[product-screenshot]: ./imgs/screenshot.gif
-[gmail-url]: mailto:darideveloper@gmail.com
-[fiverr-url]: https://www.fiverr.com/darideveloper
-[gmail-shield]: https://img.shields.io/badge/-gmail-black.svg?style=for-the-badge&logo=gmail&colorB=555&logoColor=white
-[fiverr-shield]: https://img.shields.io/badge/-fiverr-black.svg?style=for-the-badge&logo=fiverr&colorB=555&logoColor=white
+Data to write in the **items** section from the page **Customs**
 
-<span>Last code update: <time datetime="2022-11-29" class="last-update">2022-11-29</time>
+*Note: if there are categories with similar names, `CUSTOM_CATEGORY`  can be only a word of the category name (if you write this word manually, the first displayed option should be the correct one). 
+
+![custom](https://github.com/darideveloper/pack-link-bot/blob/master/screenshots/readme/custom.png?raw=true)
+
+## Counters 
+
+In the file `counters.json`, there is the options `invoice_number`. This is a counter of the orders created and it will be saved in the **Customs** page. 
+You can edit it. 
+
+```json
+{
+    "invoice_number": 333
+}
+```
+
+*Note: you can see as reference the **sample.counters.json** file*
+
+# Run
+
+For run the bot, just run with your python interpreter the `__main__.py` file  or the project folder
+
+```bash
+$ python .
+```
+
+```bash
+$ python __main__.py
+```
+
