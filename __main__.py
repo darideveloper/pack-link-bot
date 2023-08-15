@@ -14,7 +14,7 @@ class Bot (WebScraping):
     def __init__ (self):
         
         # Start chrome
-        super().__init__ (chrome_folder=CHROME_FOLDER)
+        super().__init__ (chrome_folder=CHROME_FOLDER, start_killing=True)
                 
         # Instances
         self.kofi_sheets = KofiSheets ()
