@@ -72,6 +72,8 @@ class PackLinkBot ():
                 'value': 'input[name="inventoryOfContents[0].value"]',
                 'weight': 'input[name="inventoryOfContents[0].weight"]',
                 'terms': 'input[name="customsTerms"]',
+                'vat': 'label[for="receiver.vatStatus"]',
+                'vat_personal': 'button[role="menuitem"]:last-child'
             }
         }
         
@@ -241,6 +243,11 @@ class PackLinkBot ():
         # Select made in
         mode_in_found = self.__select_item__ (selectors["made"], CUSTOM_MADE_IN)
         
+        # Select vat
+        self.driver.click_js (selectors["vat"])
+        self.driver.refresh_selenium ()
+        self.driver.click_js (selectors["vat_personal"])
+        
         # Raise errors
         if not category_found:
             raise Exception(f"category not found for {CUSTOM_CATEGORY}")
@@ -310,9 +317,10 @@ class PackLinkBot ():
         self.__address__ ()
         custom_required = self.__custom__ ()
         
-        # Select service
+        # Save draft
+        self.driver.refresh_selenium ()
         self.driver.click (self.selectors["save"])
-        sleep (3)
+        sleep (6)
         
         if self.using_default:
             error = f"Draft created using default values for {', '.join(self.using_default)}"
