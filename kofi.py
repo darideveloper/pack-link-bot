@@ -110,8 +110,8 @@ class KofiBot ():
         
         # Validate data
         default_data = {
-            "email": "sample@gmail.com",
-            "phone": "+12345678912"
+            "email": "nyxtrackers@gmail.com",
+            "phone": "+34644367711"
         }
         for key in shipping_data:
             if not shipping_data [key]: 
