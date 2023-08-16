@@ -37,6 +37,7 @@ class PackLinkBot ():
         self.current_step = "start"
       
         self.selectors = {
+            "new_button": '.css-1pae1zp button[type="button"]',
             "menu_item": 'button[role="menuitem"]',
             "next": 'button[type="submit"]',
             "save": 'button[data-id="checkout-save-button"]',
@@ -309,8 +310,11 @@ class PackLinkBot ():
         self.url = url
         self.using_default = using_default
                         
-        self.driver.set_page ("https://pro.packlink.com/private/shipments/create/info")
+        self.driver.set_page ("https://pro.packlink.com/private/shipments/ready-to-purchase")
+        self.driver.refresh_selenium ()
+        self.driver.click_js (self.selectors["new_button"])
         sleep (4)
+        self.driver.refresh_selenium ()
         
         self.__shipping__ ()
         self.__service__ ()
