@@ -55,6 +55,8 @@ class Bot (WebScraping):
                 # Fix data
                 if country == "United States":
                     country = "USA"
+                if country == "United Kingdom":
+                    country = "Kingdom"
             
                 # Get and validate shipping data
                 try:
