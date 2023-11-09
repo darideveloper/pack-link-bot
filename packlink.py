@@ -50,8 +50,8 @@ class PackLinkBot ():
                 "height": 'input[name="parcels.0.height"]',
             },
             "service": {
-                "button": ".service-list-wrapper article button",
-                "price": ".service-list-wrapper article h2",
+                "button": 'section article button',
+                "price": 'section article h2',
             },
             "address": {
                 "first_name": 'input[name="to.firstName"]', 
@@ -175,9 +175,11 @@ class PackLinkBot ():
         selectors = self.__get_selectors__ ("service")
         
         self.shipping_price = self.driver.get_text (selectors["price"])
-        button = self.driver.get_text (selectors["button"])
         
-        if not self.shipping_price or not button:
+        button_text = self.driver.get_text (selectors["button"])
+        
+        # Detect buttons not found
+        if not self.shipping_price or not button_text:
             raise Exception("services not found")
         
         # Format price
@@ -311,6 +313,7 @@ class PackLinkBot ():
         self.using_default = using_default
                         
         self.driver.set_page ("https://pro.packlink.com/private/shipments/ready-to-purchase")
+        sleep (5)
         self.driver.refresh_selenium ()
         self.driver.click_js (self.selectors["new_button"])
         sleep (4)
